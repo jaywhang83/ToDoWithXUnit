@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using ToDoList.Models;
+using Microsoft.Data.Entity;
 
 namespace ToDoList.Controllers
 {
@@ -29,6 +30,20 @@ namespace ToDoList.Controllers
         public IActionResult Create(Item item)
         {
             db.Items.Add(item);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Edit(int id)
+        {
+            var thisItem = db.Items.FirstOrDefault(x => x.ItemId == id);
+            return View(thisItem);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Item item)
+        {
+            db.Entry(item).State = Microsoft.Data.Entity.EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }
