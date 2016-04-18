@@ -9,7 +9,7 @@ namespace ToDoList.Controllers
     public class HomeController : Controller
     {
         // GET: /<controller>/
-        public IActionResult Index()
+        public IActionResult index()
         {
             return View();
         }
