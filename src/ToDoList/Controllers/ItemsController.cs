@@ -13,7 +13,7 @@ namespace ToDoList.Controllers
         private ToDoListContext db = new ToDoListContext();
         public IActionResult Index()
         {
-            return View(db.Items.ToList());
+            return View(db.Items.Include(x => x.Category).ToList());
         }
         public IActionResult Details(int id)
         {
@@ -23,6 +23,7 @@ namespace ToDoList.Controllers
 
         public IActionResult Create()
         {
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name");
             return View();
         }
 
@@ -36,28 +37,29 @@ namespace ToDoList.Controllers
 
         public IActionResult Edit(int id)
         {
-            var thisItem = db.Items.FirstOrDefault(x => x.ItemId == id);
+            var thisItem = db.Items.FirstOrDefault(d => d.ItemId == id);
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name");
             return View(thisItem);
         }
 
         [HttpPost]
         public IActionResult Edit(Item item)
         {
-            db.Entry(item).State = Microsoft.Data.Entity.EntityState.Modified;
+            db.Entry(item).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }
 
         public IActionResult Delete(int id)
         {
-            var thisItem = db.Items.FirstOrDefault(x => x.ItemId == id);
+            var thisItem = db.Items.FirstOrDefault(d => d.ItemId == id);
             return View(thisItem);
         }
 
         [HttpPost, ActionName("Delete")]
         public IActionResult DeleteConfirmed(int id)
         {
-            var thisItem = db.Items.FirstOrDefault(x => x.ItemId == id);
+            var thisItem = db.Items.FirstOrDefault(d => d.ItemId == id);
             db.Items.Remove(thisItem);
             db.SaveChanges();
             return RedirectToAction("Index");
