@@ -4,23 +4,29 @@ using Microsoft.Data.Entity;
 using ToDoList.Controllers;
 using ToDoList.Models;
 using Xunit;
+using System;
 
 namespace ToDoList.Tests
 {
     public class ItemsControllerTest
     {
+
         [Fact]
-        public void Get_ViewRestult_Index_Test()
+        public void Post_MethodAddsItem_Test()
         {
             //Arrange
+            ItemsController controller = new ItemsController();
+            Item testItem = new Item();
+            testItem.Description = "test item";
+            testItem.CategoryId = 1;
+
+            // Act
+            controller.Create(testItem);
             ViewResult indexView = new ItemsController().Index() as ViewResult;
-
-
-            //Act
-            var result = indexView.ViewData.Model;
+            var collection = indexView.ViewData.Model as IEnumerable<Item>;
 
             //Assert
-            Assert.IsType<List<Item>>(result); 
+            Assert.Contains<Item>(testItem, collection);
         }
     }
 }

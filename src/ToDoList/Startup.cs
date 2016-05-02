@@ -28,7 +28,7 @@ namespace ToDoList
             services.AddEntityFramework()
                 .AddSqlServer()
                 .AddDbContext<ToDoListContext>(options =>
-                options.UseSqlServer(Configuration["Data:DefaultConnectionString"]));
+                options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
         }
 
         public void Configure(IApplicationBuilder app)
