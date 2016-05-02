@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading.Tasks; 
 
 namespace ToDoList.Models
 {
@@ -10,6 +10,18 @@ namespace ToDoList.Models
     public class EFItemRepository : IItemRepository
     {
         ToDoListContext db = new ToDoListContext();
+
+        public EFItemRepository(ToDoListContext connection = null)
+        {
+            if (connection == null)
+            {
+                this.db = new ToDoListContext();
+            }
+            else
+            {
+                this.db = connection;
+            }
+        }
 
         public IQueryable<Item> Items
         {
@@ -38,5 +50,12 @@ namespace ToDoList.Models
             db.SaveChanges();
             return item;
         }
+
+        public void Dispose()
+        {
+         
+            db.Database.ExecuteSqlCommand("TRUNCATE TABLE [Items]");
+        }
+
     }
 }
